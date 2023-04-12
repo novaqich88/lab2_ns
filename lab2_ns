@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+
+class Matrix {
+private:
+    std::vector<std::vector<double>> data; // двовимірний масив даних
+public:
+    Matrix(int rows, int cols) {
+        data.resize(rows, std::vector<double>(cols, 0.0)); // ініціалізуємо матрицю з нулями
+    }
+    
+    // отримати розмір матриці
+    int rows() const { return data.size(); }
+    int cols() const { return data[0].size(); }
+    
+    // перезавантаження операції "-" для різниці матриць
+    Matrix operator-(const Matrix& other) const {
+        if (rows() != other.rows() || cols() != other.cols()) {
+            std::cerr << "Error: matrix dimensions don't match!" << std::endl;
+            exit(1);
+        }
+        
+        Matrix result(rows(), cols());
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < cols(); j++) {
+                result.data[i][j] = data[i][j] - other.data[i][j];
+            }
+        }
+        
+        return result;
+    }
+    
+    // перезавантаження операції "-" для віднімання числа з матриці
+    Matrix operator-(const double& scalar) const {
+        Matrix result(rows(), cols());
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < cols(); j++) {
+                result.data[i][j] = data[i][j] - scalar;
+            }
+        }
+        
+        return result;
+    }
+    
+    // перезавантаження операції "==" для перевірки рівності матриць
+    bool operator==(const Matrix& other) const {
+        if (rows() != other.rows() || cols() != other.cols()) {
+            return false;
+        }
+        
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < cols(); j++) {
+                if (data[i][j] != other.data[i][j]) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    // доступ до елементу матриці з можливістю зміни
+    double& operator()(const int& row, const int& col) {
+        return data[row][col];
+    }
+    
+    // доступ до елементу матриці без можливості зміни
+    const double& operator()(const int& row, const int& col) const {
+        return data[row][col];
+    }
+    
+    // вивід матриці у консоль
+    void print() const {
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j <
